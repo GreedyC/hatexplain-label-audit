@@ -20,7 +20,8 @@ Thanks for your interest. This repository is the reproducibility package for a l
 Keep the addition focused and discuss it in an issue first:
 
 1. Check the primary source's licence and terms before downloading. Record the
-   source, licence and any ambiguity in the provenance documentation; do not
+   source, licence and any ambiguity in the `Corpus` object's `source`/licence
+   fields and the data section of `README.md`; do not
    assume a dataset card and the upstream repository agree. Do not commit corpus
    text or user names.
 2. Add a loader in `src/rubricon_field/corpora.py` and register it in `LOADERS`.
@@ -28,8 +29,9 @@ Keep the addition focused and discuss it in an issue first:
    named `Variant` objects, label definitions and source provenance. Feed
    `(item, rater, value)` rows through `build_matrix` so duplicate handling,
    dropping single-rated items and seeded capping stay consistent. Support both
-   the default cap and `cap=None`. A new label definition changes the preregistered
-   assumptions: explain it in `DEVIATIONS.md` rather than changing them silently.
+   the default cap and `cap=None`. A new corpus is outside the pre-registered
+   analysis: note it in `CHANGELOG.md`. Use `DEVIATIONS.md` only for changes to
+   the label definitions of the six existing corpora.
 3. Add the download steps to `scripts/fetch_corpora.sh`, using the loader's
    expected paths under gitignored `data/`. Record the downloaded files' SHA-256
    checksums in `scripts/data.sha256`; the script verifies them before analysis.
