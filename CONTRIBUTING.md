@@ -20,9 +20,10 @@ Thanks for your interest. This repository is the reproducibility package for a l
 Keep the addition focused and discuss it in an issue first:
 
 1. Check the primary source's licence and terms before downloading. Record the
-   source, licence and any ambiguity in the `Corpus` object's `source`/licence
-   fields and the data section of `README.md`; do not
-   assume a dataset card and the upstream repository agree. Do not commit corpus
+   source, licence and any ambiguity in the `source` entry of the `provenance`
+   dict that the loader returns with the `Corpus` (see `load_mhs`) and in the data
+   section of `README.md`; do not assume a dataset card and the upstream
+   repository agree. Do not commit corpus
    text or user names.
 2. Add a loader in `src/rubricon_field/corpora.py` and register it in `LOADERS`.
    Follow an existing loader such as `load_mhs`: return a `Corpus` containing
