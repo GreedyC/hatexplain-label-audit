@@ -332,8 +332,13 @@ pip install -e ../rubricon      # the statistical harness
 pip install -e .
 rubricon-field run              # ~45s, writes results/
 rubricon-field report           # re-renders results/REPORT.md
-pytest -q                       # 69 tests
+pytest -q                       # tests using raw corpora skip when data is absent
 ```
+
+`make figures` regenerates the paper figures from stored results, including
+[`paper/figures/goemotions.pdf`](paper/figures/goemotions.pdf): a single-column,
+per-emotion plot sorted by alpha with the stored bootstrap intervals. It does
+not require downloading GoEmotions or recomputing its estimates.
 
 The pipeline is deterministic: no timestamps, no unseeded randomness, every seed
 derived from a single master seed in `src/rubricon_field/assumptions.py`. Two
