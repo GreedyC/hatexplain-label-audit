@@ -38,8 +38,8 @@ COL = 3.03   # ACL single-column width, inches
 FULL = 6.3
 
 
-def _save(fig, name):
-    fig.savefig(OUT / f"{name}.pdf")
+def _save(fig, name, *, metadata=None):
+    fig.savefig(OUT / f"{name}.pdf", metadata=metadata)
     plt.close(fig)
 
 
@@ -94,7 +94,8 @@ def fig_goemotions():
     ax.grid(axis="y", visible=False)
     # Keep the PDF at exactly one column, rather than tight-cropping its canvas.
     with plt.rc_context({"savefig.bbox": None}):
-        _save(fig, "goemotions")
+        # Do not embed the current time (or SOURCE_DATE_EPOCH) in this artefact.
+        _save(fig, "goemotions", metadata={"CreationDate": None, "ModDate": None})
 
 
 def fig_gate_operating_points():

@@ -7,11 +7,16 @@ from pathlib import Path
 import pytest
 
 
-def test_goemotions_uses_sorted_results_and_single_column(monkeypatch, tmp_path):
+def load_figures():
     script = Path(__file__).resolve().parents[1] / "scripts" / "make_figures.py"
     spec = importlib.util.spec_from_file_location("make_figures", script)
     figures = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(figures)
+    return figures
+
+
+def test_goemotions_uses_sorted_results_and_single_column(monkeypatch, tmp_path):
+    figures = load_figures()
     rows = [
         {"variant": "emotion:joy", "alpha": 0.7, "alpha_ci95": {"lo": 0.6, "hi": 0.8}},
         {"variant": "emotion:fear", "alpha": 0.2, "alpha_ci95": {"lo": 0.1, "hi": 0.3}},
@@ -19,7 +24,7 @@ def test_goemotions_uses_sorted_results_and_single_column(monkeypatch, tmp_path)
     (tmp_path / "cross_goemotions.json").write_text(json.dumps({"variants": rows}))
     monkeypatch.setattr(figures, "R", tmp_path)
     captured = []
-    monkeypatch.setattr(figures, "_save", lambda fig, name: captured.append((fig, name)))
+    monkeypatch.setattr(figures, "_save", lambda fig, name, **kwargs: captured.append((fig, name)))
     try:
         figures.fig_goemotions()
         fig, name = captured[0]
@@ -35,3 +40,14 @@ def test_goemotions_uses_sorted_results_and_single_column(monkeypatch, tmp_path)
     finally:
         for fig, _ in captured:
             figures.plt.close(fig)
+
+
+def test_goemotions_pdf_is_independent_of_creation_date(monkeypatch, tmp_path):
+    figures = load_figures()
+    monkeypatch.setattr(figures, "OUT", tmp_path)
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "0")
+    figures.fig_goemotions()
+    first = (tmp_path / "goemotions.pdf").read_bytes()
+    monkeypatch.setenv("SOURCE_DATE_EPOCH", "86400")
+    figures.fig_goemotions()
+    assert (tmp_path / "goemotions.pdf").read_bytes() == first

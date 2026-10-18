@@ -340,6 +340,11 @@ pytest -q                       # tests using raw corpora skip when data is abse
 per-emotion plot sorted by alpha with the stored bootstrap intervals. It does
 not require downloading GoEmotions or recomputing its estimates.
 
+For byte-identical regeneration of the whole figure set with the same pinned
+dependencies and fonts, run `SOURCE_DATE_EPOCH=0 make figures`. The existing
+figures use that fixed PDF creation date; the GoEmotions figure omits creation
+and modification dates entirely.
+
 The pipeline is deterministic: no timestamps, no unseeded randomness, every seed
 derived from a single master seed in `src/rubricon_field/assumptions.py`. Two
 runs produce byte-identical files and identical manifest hashes, which the test
